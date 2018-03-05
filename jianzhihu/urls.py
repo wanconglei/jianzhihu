@@ -21,5 +21,6 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^account/', include('account.urls')),
     url(r'^account/', include('django.contrib.auth.urls')),
+    url(r'^zhihu/', include('zhihu.urls')),
     url(r'^$', views.index, name='index'),
 ]

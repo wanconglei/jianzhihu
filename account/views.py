@@ -16,7 +16,7 @@ def register(request):
     else:
         form = RegisterForm()
 
-    return render(request, 'account/register.html', context={'form': form, 'next': redirect_to})
+    return render(request, 'register.html', context={'form': form, 'next': redirect_to})
 
 
 def index(request):
