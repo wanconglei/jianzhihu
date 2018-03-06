@@ -1,5 +1,6 @@
 from django.db import models
 from django.conf import settings
+from django.urls import reverse
 
 
 # Create your models here.
@@ -14,7 +15,7 @@ class Issue(models.Model):
     author = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='issue')
     title = models.CharField(max_length=100)
     description = models.TextField(max_length=500)
-    topic = models.ForeignKey(Topic)
+    topic = models.ForeignKey(Topic, null=True)
     create_time = models.DateTimeField(auto_now_add=True)
     anonymity = models.BooleanField(default=False)
 
@@ -23,6 +24,9 @@ class Issue(models.Model):
 
     def __str__(self):
         return self.title
+
+    def get_absolute_url(self):
+        return reverse('zhihu:detail', kwargs={'pk': self.pk})
 
 
 class Answer(models.Model):
