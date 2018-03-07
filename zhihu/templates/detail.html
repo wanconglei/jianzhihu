@@ -39,9 +39,11 @@
 							</div>
 							<div class="navbar-brand navbar-right" style="padding:10px;">
 							</div>
+                            <div class="navbar-brand navbar-right" style="padding:10px;">
+                            <span><a href="{% url 'logout' %}?next={{ request.path }}">注销登陆</a> </span>
+                            </div>
 						</div>
 					</nav>
-
 				</div>
 			</div>
 		</div>
@@ -70,11 +72,15 @@
 						</div>
 					</div>
 					<div class="col-md-4" style="text-align: center;">
+                        {% if user.is_authenticated %}
 						<button class="btn btn-default" style="margin:0px 5px;background: #0f88eb;color:white;border: 1px solid #0f88eb;">关注问题</button>
 						<button class="btn btn-default" style="margin:0px 5px;color:#0f88eb;border: 1px solid #0f88eb;">
 							<svg style="vertical-align: text-bottom;fill:#0f88eb;" viewBox="0 0 12 12" class="Icon Button-icon Icon--modify" width="14" height="16" aria-hidden="true" style="height: 16px; width: 14px;"><title></title><g><path d="M.423 10.32L0 12l1.667-.474 1.55-.44-2.4-2.33-.394 1.564zM10.153.233c-.327-.318-.85-.31-1.17.018l-.793.817 2.49 2.414.792-.814c.318-.328.312-.852-.017-1.17l-1.3-1.263zM3.84 10.536L1.35 8.122l6.265-6.46 2.49 2.414-6.265 6.46z" fill-rule="evenodd"></path></g></svg>
 							写回答
 						</button>
+                        {% else %}
+                        <p><a href="{% url 'login' %}?next={{ request.path }}">登陆</a> 后写回答 </p>
+                        {% endif %}
 					</div>
 				</div>
 			</div>
@@ -133,10 +139,47 @@
 								</span>
 							</div>
                         </div>
-						{% endfor %}
+                        <div style="margin-top:10px;border:1px solid #f3f3f3;padding:0px 15px;border-radius:5px;">
+                            <h5 style="font-weight:700;font-size:15px;color:#1e1e1e;"> {{ answer.answer_comment.count }} 条评论</h5>
+
+                            {% for i in answer.answer_comment.all %}
+
+                            <hr style="margin:10px 0px;">
+                            <img alt="Pic" src="https://img03.sogoucdn.com/app/a/100520071/ae12899ec5b481f26877c0672d525402.jpg" style="vertical-align: bottom;height: 20px;width: 20px;object-fit: cover;border-radius: 2px;">
+                            <a href="#" style="text-decoration:none;color:black;font-weight: 600;">
+                                {% if i.author.nickname %}
+                                {{ i.author.nickname }}
+                                {% else %}
+                                {{ i.author.username }}
+                                {% endif %}
+                                <!--用户昵称-->
+
+                            </a>
+
+                            <div style="margin: 10px 0px;line-height: 25px;">
+                                {{ i.content }}
+                            </div>
+                            {% endfor %}
+
+
+                            <hr style="margin:10px 0px;">
+                            {% if user.is_authenticated %}
+                            <form method="post" action="{% url 'zhihu:comment' answer.id %}" class="container-fluid " style="padding:0px;margin-bottom:10px;background-color:white;box-shadow: 0 1px 3px 0 rgba(0,34,77,.05);">
+                                <div style="width:100%;">
+                                    {% csrf_token %}
+                                    <input style="width:90%;display: inline-block;" type="text" class="form-control" name="content" placeholder="输入评论">
+                                    <button type="submit" class="btn btn-default" style="border:1px solid #0f88eb;background-color:#0f88eb;color:white;">评论</button>
+                                </div>
+                            </form>
+                            {% else %}
+                            <p><a href="#">登陆</a> 后评论</p>
+                            {% endif %}
+                        </div>
+                        {% endfor %}
                     </div>
 
 					<hr />
+                    {% if user.is_authenticated %}
                     <form method="post" action="{% url 'zhihu:detail' issue.pk %}" class="container-fluid" style="padding:16px 20px;margin-bottom:20px;background-color:white;box-shadow: 0 1px 3px 0 rgba(0,34,77,.05);">
                         {% csrf_token %}
 						<div style="width:100%;">
@@ -169,6 +212,7 @@
 							</div>
 						</div>
 					</form>
+                    {% endif %}
                 </div>
 
 				<div class="col-md-4" style="padding-right:0px;">

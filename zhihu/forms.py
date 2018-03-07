@@ -11,3 +11,8 @@ class IssueForm(forms.Form):
     title = forms.CharField(max_length=128)
     description = forms.CharField(required=True)
     anonymity = forms.BooleanField(required=False)
+
+
+class CommentForm(forms.Form):
+    content = forms.CharField(min_length=1)
+

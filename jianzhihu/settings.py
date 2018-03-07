@@ -121,6 +121,6 @@ AUTH_USER_MODEL = 'account.UserProfile'
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 STATIC_URL = '/static/'
-LOGIN_REDIRECT_URL = '/'
-LOGOUT_REDIRECT_URL = '/'
+LOGIN_REDIRECT_URL = '/zhihu/index/'
+LOGOUT_REDIRECT_URL = '/zhihu/index/'
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'

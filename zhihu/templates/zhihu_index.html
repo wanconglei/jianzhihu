@@ -35,8 +35,7 @@
 					      </a>
 					    </div>
 					    <div class="navbar-brand navbar-right" style="padding:10px;">
-
-					           <img alt="Pic" src="http://img02.sogoucdn.com/app/a/100520024/32e8ade7bdcec4fe322e04bc522ffbfc" style="height: 30px;width: 30px;object-fit: cover;border-radius: 2px;">
+                            <span><a href="{% url 'logout' %}?next={{ request.path }}">注销登陆</a> </span>
                         </div>
 					  </div>
 					</nav>
@@ -49,7 +48,7 @@
 				<div class="col-md-8" style="padding:0px;">
 
 					<div class="container-fluid" style="margin-bottom:20px;height:55px;background-color:white;box-shadow: 0 1px 3px 0 rgba(0,34,77,.05);">
-
+                    {% if user.is_authenticated %}
 						<button id="open" class="btn" style="cursor: pointer;height:100%;background-color:white;font-size: 16px;color:#262626;vertical-align:middle;">
 							<svg width="16" height="16" viewBox="0 0 17 17" xmlns="http://www.w3.org/2000/svg" class="Icon Icon--question" aria-hidden="true" style="height: 17px; width: 16px;margin-right:8px;vertical-align: text-bottom;">
 								<title></title>
@@ -72,10 +71,15 @@
 							</svg>
 							回答
 						</button>
+                        {% else %}
+                        <p style="margin-top:15px;font-size: 16px;color:#262626;vertical-align:middle;"><a href="{% url 'login' %}?next={{ request.path }}">登陆</a> 后提问与回答 </p>
+                        {% endif %}
 					</div>
                     {% for answer in answer_list %}
 					<div class="container-fluid" style="padding:16px 20px;margin-bottom:20px;background-color:white;box-shadow: 0 1px 3px 0 rgba(0,34,77,.05);">
+                        {% if answer.issue.topic %}
 						<div style="font-size: 15px;color:#8590a6;margin-bottom:15px;">来自话题：{{ answer.issue.topic }}</div>
+                        {% endif %}
 
 						<div style="margin-bottom:15px;">
 							<img alt="Pic" src="https://img03.sogoucdn.com/app/a/100520071/aa84162947baa92d7f193e34a52374b1.jpg" style="height: 30px;width: 30px;object-fit: cover;border-radius: 2px;">
@@ -94,22 +98,16 @@
                                 {% endif %}
                             </small>
 						</div>
-                        <div onclick="#'" style="cursor:pointer;margin-bottom:15px;font-size:18px;    font-weight: 700;line-height:1.6;">
+                        <div onclick="window.location.href={{ answer.issue.get_absolute_url }}" style="cursor:pointer;margin-bottom:15px;font-size:18px;    font-weight: 700;line-height:1.6;">
 							<!-- 如果笔记本电脑有3个Type-C接口 该用哪个充电？ -->
-                            <h3>{{ answer.issue.title }}</h3>
+                            <h3><a style="color:black" href="{{ answer.issue.get_absolute_url }}">{{ answer.issue.title }}</a></h3>
 						</div>
 
 						<div class="col-md-12" style="margin-bottom:15px;font-weight: 400;padding:0px;color:#262626;line-height: 1.67;cursor: pointer;font-size:15px;">
 							<!-- 谢邀。 首先，对于大部分程序员而言，在工作中不是必须的，但是你要找工作，特别是刚毕业参加校招的学生，想进入一些比较大的公司（BAT之流），是必须要学好算法的。 此外，我认为在提高自我技术水平的过程中，比如去阅读一些优秀的代码的时候，也是需要算法功底的，就像去看leveldb、redis源码的时候，起码得知道跳表是个啥吧，看… -->
-							{{answer.content|truncatechars:120}}
-							<a href="{{ answer.issue.get_absolute_url }}" style="font-weight: 400;font-size: inherit;color: #8590a6;text-decoration: none;">
-						    	阅读全文
-						    	<svg viewBox="0 0 10 6" class="Icon ContentItem-arrowIcon Icon--arrow" width="10" height="16" aria-hidden="true" style="margin-left:6px;fill: #9fadc7;height: 17px; width: 10px;vertical-align: text-bottom;">
-						    	<title></title><g>
-						    		<path d="M8.716.217L5.002 4 1.285.218C.99-.072.514-.072.22.218c-.294.29-.294.76 0 1.052l4.25 4.512c.292.29.77.29 1.063 0L9.78 1.27c.293-.29.293-.76 0-1.052-.295-.29-.77-.29-1.063 0z">
-						    	</path></g>
-						    </svg>
-						    </a>
+							{{ answer.content }}
+                        <hr/>
+                            <span style="margin-top:0px;font-weight: 400;padding:0px;color:#262626;line-height: 1.67;font-size:10px;">赞同{{ answer.agree }} 反对{{ answer.disagree }}</span>
 						</div>
                     </div>
                     {% endfor %}

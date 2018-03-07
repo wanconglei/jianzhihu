@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import Issue, Answer, Attitude
-from .forms import IssueForm, AnswerForm
+from .models import Issue, Answer, Attitude, Comment
+from .forms import IssueForm, AnswerForm, CommentForm
 
 
 # Create your views here.
@@ -33,3 +33,18 @@ def detail(request, pk):
             return redirect('zhihu:detail', pk=pk)
     issue = get_object_or_404(Issue, pk=pk)
     return render(request, 'detail.html', context={'issue': issue})
+
+
+def comments(request, answer_pk):
+    if request.method == 'POST':
+        form = CommentForm(request.POST)
+        answer = Answer.objects.filter(pk=answer_pk)
+        answer = answer.first()
+        if form.is_valid() and answer:
+            user = request.user
+            content = form.cleaned_data['content']
+            comment = Comment(author=user, answer=answer, content=content)
+            comment.save()
+            return redirect(answer.issue)
+        print(form.errors)
+    return redirect(answer.issue)

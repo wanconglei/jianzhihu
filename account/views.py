@@ -12,12 +12,8 @@ def register(request):
             if redirect_to:
                 return redirect(redirect_to)
             else:
-                return redirect(redirect_to)
+                return redirect('login')
     else:
         form = RegisterForm()
 
     return render(request, 'register.html', context={'form': form, 'next': redirect_to})
-
-
-def index(request):
-    return render(request, 'index.html')

@@ -66,3 +66,10 @@ class Attitude(models.Model):
 
     def __str__(self):
         return self.attitude
+
+
+class Comment(models.Model):
+    author = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='author_comment')
+    answer = models.ForeignKey(Answer, related_name='answer_comment')
+    content = models.TextField()
+    create_time = models.DateTimeField(auto_now_add=True)
